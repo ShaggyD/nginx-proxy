@@ -161,8 +161,6 @@ server {
 
 	ssl_certificate /etc/nginx/certs/{{ (printf "%s.crt" $cert) }};
 	ssl_certificate_key /etc/nginx/certs/{{ (printf "%s.key" $cert) }};
-	client_max_body_size 10G;
-	client_body_buffer_size 128K;
 
 	{{ if (exists (printf "/etc/nginx/certs/%s.dhparam.pem" $cert)) }}
 	ssl_dhparam {{ printf "/etc/nginx/certs/%s.dhparam.pem" $cert }};
@@ -185,6 +183,8 @@ server {
 		{{ else }}
 		proxy_pass {{ trim $proto }}://{{ trim $host }};
 		{{ end }}
+		client_max_body_size 10G;
+		client_body_buffer_size 128K;
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";
 		auth_basic_user_file	{{ (printf "/etc/nginx/htpasswd/%s" $host) }};
@@ -219,6 +219,8 @@ server {
 		{{ else }}
 		proxy_pass {{ trim $proto }}://{{ trim $host }};
 		{{ end }}
+		client_max_body_size 10G;
+		client_body_buffer_size 128K;
 		{{ if (exists (printf "/etc/nginx/htpasswd/%s" $host)) }}
 		auth_basic	"Restricted {{ $host }}";
 		auth_basic_user_file	{{ (printf "/etc/nginx/htpasswd/%s" $host) }};
